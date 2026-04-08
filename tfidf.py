@@ -1,4 +1,4 @@
-
+#!/usr/bin/env python3
 """
 TF-IDF pipeline: read document list from tfidf_docs.txt, preprocess each document,
 write preproc_* and tfidf_* files.
@@ -103,11 +103,8 @@ def compute_tfidf_top5(
         for term, cnt in c.items():
             tf = cnt / total_terms
             scores[term] = tf * idf(term)
-        # Rank by rounded score (2 decimals), then alphabetically for ties at that precision
-        sorted_terms = sorted(
-            scores.keys(),
-            key=lambda w: (-round(scores[w], 2), w),
-        )
+        # Rank by full TF-IDF score, then alphabetically for true ties.
+        sorted_terms = sorted(scores.keys(), key=lambda w: (-scores[w], w))
         top = sorted_terms[:5]
         results.append([(w, round(scores[w], 2)) for w in top])
     return results
